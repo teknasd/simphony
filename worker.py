@@ -12,9 +12,9 @@ def callback(ch, method, properties, body):
     fun = json.loads(body)
     print(fun)
     print("---------- start ------------")
-    # print(globals())
-    # globals()[fun['call']]
-    bar = getattr(funcs, fun['call'])
+
+    module = __import__(fun['dag'])
+    bar = getattr(module, fun['call'])
     bar()
 
 

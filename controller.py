@@ -10,7 +10,7 @@ r = Rabi(q = "ex")
 ack = Rabi(q = "ack")
 print(f"----------> {d.root }")
 root_task = d.root 
-r.push_to_q(json.dumps({"call":root_task}))
+r.push_to_q(json.dumps({"dag":"funcs","call":root_task}))
 # wait for ack
 d.get_neighbors()
 
