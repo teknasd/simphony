@@ -1,21 +1,24 @@
 #!/usr/bin/env python
 import sys, os
 from rabi import Rabi
+from pprint import pprint
+import json
+import funcs
 
 def callback(ch, method, properties, body):
-    print(ch, method, properties, body)
+    print("---------- recieved ---------")
+    pprint(ch.__dict__)
     print(" [x] Received %r" % body)
+    fun = json.loads(body)
+    print(fun)
+    print("---------- start ------------")
+    # print(globals())
+    # globals()[fun['call']]
+    bar = getattr(funcs, fun['call'])
+    bar()
+
 
 def main():
-    # connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
-    # channel = connection.channel()
-
-    # channel.queue_declare(queue='ex')
-    # channel.basic_consume(queue='ex', on_message_callback=callback, auto_ack=True)
-
-    # print(' [*] Waiting for messages. To exit press CTRL+C')
-    # channel.start_consuming()
-
     r = Rabi(q = "ex")
     r.listen_and_call(call= callback)
 
