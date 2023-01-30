@@ -36,13 +36,14 @@ def push_next_tasks(v):
 
     
 def ack(ch, method, properties, body): 
-    print("---------- recieved ---------")
+    print("---------- ack recieved ---------")
     # print(ch.__dict__)
     print(" [x] Received %r" % body)
     res = json.loads(body)
     print(res["status"])
-    print(d.g.vs.select(task_eq=res["call"]))
-    push_next_tasks(d.g.vs.select(task_eq=res["call"])[0])
+    if res["status"]=='success':
+        print(d.g.vs.select(task_eq=res["call"]))
+        push_next_tasks(d.g.vs.select(task_eq=res["call"])[0])
 
 
 
