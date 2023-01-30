@@ -4,6 +4,7 @@ from rabi import Rabi
 from pprint import pprint
 import json
 import traceback
+from retry import retry
 
 def pre_post_signal(func):
     def wrapper(*args, **kwargs):
@@ -20,6 +21,7 @@ def pre_post_signal(func):
     return wrapper
 
 @pre_post_signal
+@retry(tries = 3)
 def runtime_func(params):
     module = __import__(params['dag'])
     func = getattr(module, params['call'])

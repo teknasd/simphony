@@ -8,6 +8,7 @@ def b():
     for i in range(10):
         print(i)
     time.sleep(5)
+    raise "Eroor in BBBBBBBBBB"
 
 def c():
     for i in range(10,0,-1):
