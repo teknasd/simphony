@@ -7,30 +7,42 @@ d = DAG(user = 1, data = "./dag.json")
 d.create_graph()
 
 def init():
-    r = Rabi(q = "ex")
+    # r = Rabi(q = "ex")
     print(f"----------> {d.root }")
-    root_task = d.root 
-    r.push_to_q(json.dumps({"dag":"funcs","call":root_task}))
+    vertex_id = d.g.vs.find(task = d.root)
+    push_task_to_q(vertex_id.index)
 
 
+def push_task_to_q(t):
+    task_obj = json.dumps(
+                {
+                    "dag":"funcs",
+                    "call":d.g.vs[t]['task'],
+                    "task_id":d.g.vs[t]['task_id'],
+                    "job_id":d.job_id,
+                    }
+                )
+    r = Rabi(q = "ex")
+    r.push_to_q(task_obj)
 
 def push_next_tasks(v):
     tasks = d.get_neighbors(vertex=v)
     print("tasks",tasks)
-    r = Rabi(q = "ex")
+    
     for t in tasks:
         print("t:",t)
-        print("v:",d.g.vs[t]['name'])
-        r.push_to_q(json.dumps({"dag":"funcs","call":d.g.vs[t]['name']}))
+        print("v:",d.g.vs[t]['task'])
+        push_task_to_q(t)
+
     
-def ack(ch, method, properties, body):
+def ack(ch, method, properties, body): 
     print("---------- recieved ---------")
-    print(ch.__dict__)
+    # print(ch.__dict__)
     print(" [x] Received %r" % body)
     res = json.loads(body)
     print(res["status"])
-    print(d.g.vs.select(name_eq=res["call"]))
-    push_next_tasks(d.g.vs.select(name_eq=res["call"])[0])
+    print(d.g.vs.select(task_eq=res["call"]))
+    push_next_tasks(d.g.vs.select(task_eq=res["call"])[0])
 
 
 

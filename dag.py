@@ -1,6 +1,7 @@
 import igraph
 import json
 from pprint import pprint
+from uuid import uuid4
 
 '''
 https://igraph.org/python/tutorial/0.9.7/tutorial.html#setting-and-retrieving-attributes
@@ -11,6 +12,7 @@ class DAG():
     def __init__(self,user,data) -> None:
         self.dict_x = {}
         self.user = user
+        self.job_id = str(uuid4())
         try:
             self.data = json.load(open(data,"r"))
         except Exception:
@@ -23,26 +25,21 @@ class DAG():
         pprint(self.data)
 
     def create_graph(self):
-        self.g = igraph.Graph(directed =True)
+        nodes = len(self.data["nodes"])
+        self.g = igraph.Graph(nodes,directed =True)
         self._fill_nodes()
         self._fill_connections()
 
-        #g.add_vertices(self.list_of_nodes)
-    def _print_allnodes(self):
-        for n in self.g.vs:
-            pass
         
     def _fill_nodes(self):
-        for e,node in enumerate(self.data["nodes"]):
-            self.g.add_vertex(node)
-            # self.g.vs[e]["nodeId"] = node
-            # self.g.vs[e]["type"] = self.data["nodes"][node]["type"]
+        for e,task in enumerate(self.data["nodes"]):
+            # n = {"node":node,"task_id":uuid4()}
+            self.g.vs[e]["task"] = task
+            self.g.vs[e]["task_id"] = str(uuid4())
 
-            # self.g.vs[e]["ports"] = self.data["nodes"][node]["ports"]
-            # self.g.vs[e]["conditions"] = self.data["nodes"][node]["conditions"]
 
     def _get_vertex_id(self,id_):
-        p = self.g.vs.find(name = id_)
+        p = self.g.vs.find(task = id_)
         print(p.index)
         return p.index
 
@@ -55,15 +52,6 @@ class DAG():
             for edge in self.data["links"].keys()
         ]
         self.g.add_edges(list_of_edges)
-
-
-    
-    def debugMessage(funName, *args):
-        try:
-            print("--------------------")
-            pprint(funName, "-", args)
-        except:
-            pass
 
     def getListOfObjects(self,data,type):
         listOfObject = []
@@ -84,10 +72,5 @@ class DAG():
 
 
     def get_neighbors(self,vertex = None):
-        vertex = self.g.vs.find(name= self.root) if vertex is None else vertex
+        vertex = self.g.vs.find(task= self.root) if vertex is None else vertex
         return self.g.neighborhood(vertices=vertex, order=1, mode='out',mindist = 1)
-
-    # def 
-
-
-    
