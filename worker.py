@@ -6,27 +6,40 @@ import json
 import funcs
 import traceback
 
+def pre_post_signal(func):
+    def wrapper(*args, **kwargs):
+        params = kwargs["params"]
+        try:
+            result = func(*args, **kwargs)
+            emit_ack(params['call'],"success")
+            return result
+        except Exception:
+            emit_ack(params['call'],"failed")
+            print(f'There is some error at {traceback.format_exc()}')
+            return False
+
+    return wrapper
+
+@pre_post_signal
+def runtime_func(params):
+    module = __import__(params['dag'])
+    func = getattr(module, params['call'])
+    func()
+    return True
+    
 def callback(ch, method, properties, body):
     print("---------- recieved ---------")
-    pprint(ch.__dict__)
+    # pprint(ch.__dict__)
     print(" [x] Received %r" % body)
     params = json.loads(body)
     print(params)
     print("---------- start ------------")
-
-    try:
-        module = __import__(params['dag'])
-        func = getattr(module, params['call'])
-        func()
-        emit_ack(params['call'])
-        
-    except Exception:
-        print(f'There is some error at {traceback.format_exc()}')
+    runtime_func(params=params)
     print("---------- end ------------")
 
-def emit_ack(call):
+def emit_ack(call,status):
     r = Rabi(q = "ack")
-    r.push_to_q(json.dumps({"status":"success","call":call}))
+    r.push_to_q(json.dumps({"status":status,"call":call}))
 
 def main():
     r = Rabi(q = "ex")
