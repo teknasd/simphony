@@ -10,16 +10,16 @@ def callback(ch, method, properties, body):
     print("---------- recieved ---------")
     pprint(ch.__dict__)
     print(" [x] Received %r" % body)
-    fun = json.loads(body)
-    print(fun)
+    params = json.loads(body)
+    print(params)
     print("---------- start ------------")
 
     try:
-        module = __import__(fun['dag'])
-        bar = getattr(module, fun['call'])
-        bar()
-        emit_ack(fun['call'])
-    
+        module = __import__(params['dag'])
+        func = getattr(module, params['call'])
+        func()
+        emit_ack(params['call'])
+        
     except Exception:
         print(f'There is some error at {traceback.format_exc()}')
     print("---------- end ------------")

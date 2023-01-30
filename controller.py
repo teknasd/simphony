@@ -34,15 +34,10 @@ def ack(ch, method, properties, body):
 
 
 
-def load_next():
-
-        
+def callback_func():
     r = Rabi(q = "ack")
     r.listen_and_call(call= ack)
 
-
-
-# while 
 init()
 
 
@@ -52,7 +47,7 @@ init()
 
 
 # Start listening for ACK on another thread
-listen_thread = threading.Thread(target=load_next)
+listen_thread = threading.Thread(target=callback_func)
 listen_thread.start()
 
 

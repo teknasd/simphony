@@ -37,6 +37,7 @@ class Rabi():
         print(f"***** push to q : {res}")
 
     def listen_and_call(self,q=None,call=None):
+        ''' Continously listen on seperate thread '''
         if q is None:
             q = self.q
         self.channel.basic_consume(queue=q, on_message_callback=call, auto_ack=True)
