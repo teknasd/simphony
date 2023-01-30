@@ -12,7 +12,7 @@ class DAG():
     def __init__(self,user,data) -> None:
         self.dict_x = {}
         self.user = user
-        self.job_id = str(uuid4())
+        self.dag_id = str(uuid4())
         try:
             self.data = json.load(open(data,"r"))
         except Exception:

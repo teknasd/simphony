@@ -3,7 +3,6 @@ import sys, os
 from rabi import Rabi
 from pprint import pprint
 import json
-import funcs
 import traceback
 
 def pre_post_signal(func):

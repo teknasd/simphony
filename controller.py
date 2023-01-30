@@ -19,7 +19,7 @@ def push_task_to_q(t):
                     "dag":"funcs",
                     "call":d.g.vs[t]['task'],
                     "task_id":d.g.vs[t]['task_id'],
-                    "job_id":d.job_id,
+                    "dag_id":d.dag_id,
                     }
                 )
     r = Rabi(q = "ex")
