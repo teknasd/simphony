@@ -1,5 +1,6 @@
 import numpy as np
 import time
+from rshift import *
 def a():
     print("inside func a")
     time.sleep(5)
@@ -22,5 +23,7 @@ def e():
     pass
 
 
+Make(a) >> Make(b) >> Make(d)
+Make(a) >> Make(c) >> Make(e)
 
-
+print(flow)
