@@ -22,6 +22,7 @@ class DAG():
         self.root = self.data["root"]
         self.list_of_nodes = self.data["nodes"]
         self.list_of_links = self.data["links"]
+        self.state = dict()
         pprint(self.data)
 
     def create_graph(self):
@@ -36,6 +37,7 @@ class DAG():
             # n = {"node":node,"task_id":uuid4()}
             self.g.vs[e]["task"] = task
             self.g.vs[e]["task_id"] = str(uuid4())
+            self.state[self.g.vs[e]["task_id"]] = "Pending"
 
 
     def _get_vertex_id(self,id_):

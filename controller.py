@@ -2,6 +2,7 @@ import json
 from dag import DAG
 from rabi import Rabi    
 import threading
+from pprint import pprint
 
 d = DAG(user = 1, data = "./dag.json")
 d.create_graph()
@@ -32,19 +33,33 @@ def push_next_tasks(v):
     for t in tasks:
         print("t:",t)
         print("v:",d.g.vs[t]['task'])
+        d.state[d.g.vs[t]["task_id"]] = "Queued"
         push_task_to_q(t)
 
+def mark_next_tasks(v,state):
+    tasks = d.get_neighbors(vertex=v)
+    print("tasks",tasks)
+    for t in tasks:
+        print("t:",t)
+        print("v:",d.g.vs[t]['task'])
+        d.state[d.g.vs[t]["task_id"]] = state
+        mark_next_tasks(t,state="Skipped")
     
 def ack(ch, method, properties, body): 
+    ''' shoud not know anything about dag obj '''
+
     print("---------- ack recieved ---------")
-    # print(ch.__dict__)
     print(" [x] Received %r" % body)
     res = json.loads(body)
     print(res["status"])
-    if res["status"]=='success':
-        print(d.g.vs.select(task_eq=res["call"]))
-        push_next_tasks(d.g.vs.select(task_eq=res["call"])[0])
+    d.state[res["task_id"]] = res["status"]
+    pprint(d.state)
+    if res["status"]=='Success':
+        print(d.g.vs.select(task_id_eq=res["task_id"]))
+        push_next_tasks(d.g.vs.select(task_id_eq=res["task_id"])[0])
 
+    elif res["status"]=='Failed':
+        mark_next_tasks(v = d.g.vs.select(task_id_eq=res["task_id"])[0],state = "Skipped")
 
 
 def callback_func():

@@ -11,10 +11,10 @@ def pre_post_signal(func):
         params = kwargs["params"]
         try:
             result = func(*args, **kwargs)
-            emit_ack(params['call'],"success")
+            emit_ack(params,"Success")
             return result
         except Exception:
-            emit_ack(params['call'],"failed")
+            emit_ack(params,"Failed")
             print(f'There is some error at {traceback.format_exc()}')
             return False
 
@@ -38,9 +38,9 @@ def callback(ch, method, properties, body):
     runtime_func(params=params)
     print("---------- end ------------")
 
-def emit_ack(call,status):
+def emit_ack(p,status):
     r = Rabi(q = "ack")
-    r.push_to_q(json.dumps({"status":status,"call":call}))
+    r.push_to_q(json.dumps({"status":status,"call":p["call"],"task_id":p["task_id"]}))
 
 def main():
     r = Rabi(q = "ex")
