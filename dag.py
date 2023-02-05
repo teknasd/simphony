@@ -55,14 +55,8 @@ class DAG():
         ]
         self.g.add_edges(list_of_edges)
 
-    def getListOfObjects(self,data,type):
-        listOfObject = []
-        for key in data['nodes'].keys():
-            if(data['nodes'][key]['type'] == type):
-                tmpData = {key:data['nodes'][key]['properties']['name']}
-                listOfObject.append(tmpData)
-        return listOfObject
-
+    def get_v_val(self,id,key):
+        return self.g.vs[id][key]
 
     def nodes_list(self,data):
         keylist = data.keys()

@@ -34,7 +34,7 @@ class Rabi():
         res = self.channel.basic_publish(exchange='',
                             routing_key=self.q,
                             body=context)
-        print(f"***** push to q : {res}")
+        print(f"***** push to q : {context}")
 
     def listen_and_call(self,q=None,call=None):
         ''' Continously listen on seperate thread '''
