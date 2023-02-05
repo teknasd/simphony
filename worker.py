@@ -40,7 +40,8 @@ def callback(ch, method, properties, body):
 
 def emit_ack(p,status):
     r = Rabi(q = "ack")
-    r.push_to_q(json.dumps({"status":status,"call":p["call"],"task_id":p["task_id"]}))
+    p["status"] = status
+    r.push_to_q(json.dumps(p))
 
 def main():
     r = Rabi(q = "ex")
