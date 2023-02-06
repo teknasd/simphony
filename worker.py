@@ -5,12 +5,15 @@ from pprint import pprint
 import json
 import traceback
 from retry import retry
-
+import time
 def pre_post_signal(func):
     def wrapper(*args, **kwargs):
         params = kwargs["params"]
         try:
+            st_time = time.monotonic()
             result = func(*args, **kwargs)
+            en_time = time.monotonic()
+            print(f"time taken: {en_time- st_time} ms")
             emit_ack(params,"Success")
             return result
         except Exception:
