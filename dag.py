@@ -36,9 +36,6 @@ class DAG():
         module = importlib.import_module(self.filepath)
         # print(module)
         self.module_vars = vars(module)
-        # print(self.module_vars['Make'].flow)
-        # print(self.module_vars.keys())
-        # print(flow)
         self.flow = self.module_vars['Make'].flow
         self.nodes = self.module_vars['Make'].nodes #self._find_nodes()
         self.nodes_count = len(self.nodes)
@@ -57,17 +54,9 @@ class DAG():
         self._fill_nodes()
         self._fill_connections()
 
-        
-    # def _fill_nodes(self):
-    #     for e,task in enumerate(self.data["nodes"]):
-    #         # n = {"node":node,"task_id":uuid4()}
-    #         self.g.vs[e]["task"] = task
-    #         self.g.vs[e]["task_id"] = str(uuid4())
-    #         self.state[self.g.vs[e]["task_id"]] = "Pending"
-
     def _fill_nodes(self):
         for e,task in enumerate(self.nodes):
-            self.g.vs[e]["task"] = task.func.__name__
+            self.g.vs[e]["task"] = task #task.func.__name__
             self.g.vs[e]["task_id"] = str(uuid4())
             self.state[self.g.vs[e]["task_id"]] = "Pending"
 
