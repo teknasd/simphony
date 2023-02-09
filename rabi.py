@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 import pika
 
-location = "192.168.243.22"
-location = "rabbitmq"
-location = "localhost"
+location = "172.16.12.17"
+# location = "rabbitmq"
+# location = "localhost"
 
 class Rabi():
     def __init__(self,q = None):

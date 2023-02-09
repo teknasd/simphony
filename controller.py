@@ -5,20 +5,25 @@ import threading
 from pprint import pprint
 
 # dag_store = {}
-filepath = "./dag.json"
+filepath = "funcs"
 
 class Controller:
 
     def __init__(self,filepath):
-        self.d = DAG(user = 1, data = filepath)
-        self.d.create_graph()
+        # for all dag in dags folder
+        
+        self.d = DAG(user = 1, filepath = filepath)
+        self.d.create_graph_py()
         # self.dag_store[d.dag_id] = d
+        # print(self.d)
         self.dag_store = {
             self.d.dag_id : self.d
         }
-        print(f"----------> {self.d.root }")
-        vertex_id = self.d.g.vs.find(task = self.d.root)
-        self.push_task_to_q(vertex_id.index)
+        print(self.dag_store)
+        # print(f"----------> {self.d.root }")
+        # vertex_id = self.d.g.vs.find(task = self.d.root)
+        for node in self.d.find_root_nodes():
+            self.push_task_to_q(node)
 
 
     def push_task_to_q(self,t):
@@ -32,6 +37,7 @@ class Controller:
                     )
         r = Rabi(q = "ex")
         r.push_to_q(task_obj)
+
 
     def push_next_tasks(self,v):
         tasks = self.d.get_neighbors(vertex=v)
@@ -57,6 +63,8 @@ def ack(ch, method, properties, body):
     print(" [x] Received %r" % body)
     res = json.loads(body)
     print(res["status"])
+
+    print(C.dag_store)
     d = C.dag_store[res["dag_id"]]
     d.state[res["task_id"]] = res["status"]
     pprint(d.state)

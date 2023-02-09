@@ -13,7 +13,7 @@ def pre_post_signal(func):
             st_time = time.monotonic()
             result = func(*args, **kwargs)
             en_time = time.monotonic()
-            print(f"time taken: {en_time- st_time} ms")
+            print(f"time taken: {en_time- st_time} secs")
             emit_ack(params,"Success")
             return result
         except Exception:
@@ -44,6 +44,7 @@ def callback(ch, method, properties, body):
 def emit_ack(p,status):
     r = Rabi(q = "ack")
     p["status"] = status
+    pprint(p)
     r.push_to_q(json.dumps(p))
 
 def main():

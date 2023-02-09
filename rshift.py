@@ -13,13 +13,13 @@ class DagReader():
 
 # d = DagReader()
 
-flow = []
 class Make():
+    flow = []   
     def __init__(self,func) -> None:
         self.func = func
     
     def __rshift__(self,next):
-        flow.append([self,next])
+        Make.flow.append([self,next])
         return next
 
 # @d.make
@@ -41,7 +41,7 @@ def div():
 
 a = 4
 b = 2
-print(f"{a} >> {b} = {a >> b}")
+# print(f"{a} >> {b} = {a >> b}")
 
 # def __rshift__(q,w):
 #     flow.append(q)
@@ -50,5 +50,5 @@ print(f"{a} >> {b} = {a >> b}")
 #         pass
 #     return d
 
-print(Make(add) >> Make(sub) >> Make(mul))
-print(Make(sub) >> Make(div))
+# print(Make(add) >> Make(sub) >> Make(mul))
+# print(Make(sub) >> Make(div))

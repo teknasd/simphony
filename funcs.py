@@ -9,7 +9,7 @@ def b():
     for i in range(10):
         print(i)
     time.sleep(5)
-    raise "Eroor in BBBBBBBBBB"
+    # raise "Eroor in BBBBBBBBBB"
 
 def c():
     for i in range(10,0,-1):
@@ -26,4 +26,7 @@ def e():
 Make(a) >> Make(b) >> Make(d)
 Make(a) >> Make(c) >> Make(e)
 
-print(flow)
+# print(flow)
+# for f in flow:
+#     for t in f:
+#         print(t.func)
