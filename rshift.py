@@ -15,8 +15,10 @@ class DagReader():
 
 class Make():
     flow = []   
+    nodes = []
     def __init__(self,func) -> None:
         self.func = func
+        Make.nodes.append(self)
     
     def __rshift__(self,next):
         Make.flow.append([self,next])

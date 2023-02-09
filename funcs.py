@@ -26,7 +26,12 @@ def e():
 Make(a) >> Make(b) >> Make(d)
 Make(a) >> Make(c) >> Make(e)
 
+
+def mad():
+    print("insidde multiverse")
 # print(flow)
 # for f in flow:
 #     for t in f:
 #         print(t.func)
+
+Make(mad)

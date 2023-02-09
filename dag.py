@@ -40,8 +40,8 @@ class DAG():
         # print(self.module_vars.keys())
         # print(flow)
         self.flow = self.module_vars['Make'].flow
-        self.nodes = self._find_nodes()
-        self.nodes_count = self._count_nodes()
+        self.nodes = self.module_vars['Make'].nodes #self._find_nodes()
+        self.nodes_count = len(self.nodes)
         self.g = igraph.Graph(self.nodes_count,directed =True)
         self._fill_nodes()
         self._fill_connections()
@@ -67,17 +67,13 @@ class DAG():
 
     def _fill_nodes(self):
         for e,task in enumerate(self.nodes):
-            self.g.vs[e]["task"] = task
+            self.g.vs[e]["task"] = task.func.__name__
             self.g.vs[e]["task_id"] = str(uuid4())
             self.state[self.g.vs[e]["task_id"]] = "Pending"
 
 
     def _get_vertex_id(self,id_):
-        p = self.g.vs.find(task = id_)
-        # print(p.index)
-        return p.index
-
-    def _get_vertex_id(self,id_):
+        print(id_)
         p = self.g.vs.find(task = id_)
         # print(p.index)
         return p.index
