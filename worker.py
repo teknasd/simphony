@@ -6,6 +6,7 @@ import json
 import traceback
 from retry import retry
 import time
+import importlib
 def pre_post_signal(func):
     def wrapper(*args, **kwargs):
         params = kwargs["params"]
@@ -26,7 +27,7 @@ def pre_post_signal(func):
 @pre_post_signal
 @retry(tries = 3)
 def runtime_func(params):
-    module = __import__(params['dag'])
+    module = importlib.import_module(params['dag'])
     func = getattr(module, params['call'])
     func()
     return True
@@ -39,7 +40,7 @@ def callback(ch, method, properties, body):
     print(params)
     print("---------- start ------------")
     runtime_func(params=params)
-    print("---------- end ------------")
+    print("---------- end --------------\n\n\n")
 
 def emit_ack(p,status):
     r = Rabi(q = "ack")

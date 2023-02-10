@@ -1,4 +1,5 @@
 import igraph
+import importlib
 import json
 from pprint import pprint
 from uuid import uuid4
@@ -32,9 +33,7 @@ class DAG():
     #     return f"DAG id: {self.dag_id}"
     
     def create_graph_py(self):
-        import importlib
         module = importlib.import_module(self.filepath)
-        # print(module)
         self.module_vars = vars(module)
         self.flow = self.module_vars['Make'].flow
         self.nodes = self.module_vars['Make'].nodes #self._find_nodes()
