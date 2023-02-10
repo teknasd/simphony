@@ -65,6 +65,10 @@ def ack(ch, method, properties, body):
     print(res["status"])
 
     print(C.dag_store)
+
+    if res["dag_id"] not in C.dag_store.keys():
+        print("DAG id not found in store")
+        return
     d = C.dag_store[res["dag_id"]]
     d.state[res["task_id"]] = res["status"]
     pprint(d.state)
