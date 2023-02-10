@@ -47,11 +47,13 @@ def emit_ack(p,status):
     p["status"] = status
     pprint(p)
     r.push_to_q(json.dumps(p))
+    r.close()
 
 def main():
     r = Rabi(q = "ex")
     r.listen_and_call(call= callback)
     print("********************")
+    r.close()
 
 if __name__ == '__main__':
     try:

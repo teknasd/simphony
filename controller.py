@@ -11,17 +11,11 @@ class Controller:
 
     def __init__(self,filepath):
         # for all dag in dags folder
-        
+        self.dag_store = {}
         self.d = DAG(user = 1, filepath = filepath)
         self.d.create_graph_py()
-        # self.dag_store[d.dag_id] = d
-        # print(self.d)
-        self.dag_store = {
-            self.d.dag_id : self.d
-        }
+        self.dag_store[self.d.dag_id] = self.d
         print(self.dag_store)
-        # print(f"----------> {self.d.root }")
-        # vertex_id = self.d.g.vs.find(task = self.d.root)
         for node in self.d.find_root_nodes():
             self.push_task_to_q(node)
 
@@ -37,6 +31,7 @@ class Controller:
                     )
         r = Rabi(q = "ex")
         r.push_to_q(task_obj)
+        r.close()
 
 
     def push_next_tasks(self,v):
@@ -83,6 +78,7 @@ def ack(ch, method, properties, body):
 def callback_func():
     r = Rabi(q = "ack")
     r.listen_and_call(call= ack)
+    r.close()
 
 
 C = Controller(filepath=filepath)
