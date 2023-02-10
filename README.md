@@ -9,8 +9,8 @@ reddis -> to maintain states
 ```
 
 ### How to use it:
-- define dags in dags.json
-- write loose functions in dags.py
+- write loose functions in dags/funcs.py
+- Define it as ``` Make(funcA) >> Make(funcB) ``` to make link
 - define your dag in controller.py
 - run controller.py in one shell
 - run worker.py in as many shells you want
@@ -24,10 +24,10 @@ reddis -> to maintain states
 - keep flag of STATELESS to skip all DB operations and use redis only
 - multitreading in workers (concurrency)
 - multiprocessing in workers (parallelization)
-- Have controller in class
+- Have controller in class ✅
 - FastAPI to trigger dag controller
-- use task definations and task flow from same file
-- UI ? idk
+- use task definations and task flow from same file ✅
+- UI ? idk 
 
 
 
