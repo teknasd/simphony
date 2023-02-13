@@ -3,6 +3,7 @@ import importlib
 import json
 from pprint import pprint
 from uuid import uuid4
+from rshift import Make
 
 '''
 https://igraph.org/python/tutorial/0.9.7/tutorial.html#setting-and-retrieving-attributes
@@ -15,7 +16,9 @@ class DAG():
         self.user = user
         self.dag_id = str(uuid4())
         self.state = dict()
-        self.filepath = filepath
+        self.filepath = str(filepath)
+        self.dag = self.filepath.split(".")[0].replace('/','.')
+        # print(self.dag)
         try:
             self.data = json.load(open(filepath,"r"))
         except Exception:
@@ -33,14 +36,18 @@ class DAG():
     #     return f"DAG id: {self.dag_id}"
     
     def create_graph_py(self):
-        module = importlib.import_module(self.filepath)
+        module = importlib.import_module(self.dag)
         self.module_vars = vars(module)
+        print(Make.flow)
         self.flow = self.module_vars['Make'].flow
         self.nodes = self.module_vars['Make'].nodes #self._find_nodes()
         self.nodes_count = len(self.nodes)
         self.g = igraph.Graph(self.nodes_count,directed =True)
         self._fill_nodes()
         self._fill_connections()
+        Make.flow = []
+        Make.nodes = set()
+        
 
     def _find_nodes(self):
         return set(t.func.__name__ for f in self.flow for t in f )
@@ -61,7 +68,7 @@ class DAG():
 
 
     def _get_vertex_id(self,id_):
-        print(id_)
+        # print(id_)
         p = self.g.vs.find(task = id_)
         # print(p.index)
         return p.index
