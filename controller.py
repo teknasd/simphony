@@ -4,8 +4,6 @@ from rabi import Rabi
 import threading
 from pprint import pprint
 
-# dag_store = {}
-filepath = "dags.funcs"
 
 class Controller:
 
