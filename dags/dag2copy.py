@@ -5,8 +5,9 @@ import random
 
 
 
-def matrix_multiplication():
-    n = 100
+def matrix_multiplication(context):
+
+    n = 500
     ''' author - chatgpt '''
     # Create two matrices with random integers
     matrix1 = [[random.randint(1, 10) for _ in range(n)] for _ in range(n)]
@@ -25,7 +26,7 @@ def matrix_multiplication():
     # for row in result:
     #     print(row)
     print(f"Time taken: {end_time - start_time}  secs")
-
+    return context
 
 # Make(qwe) >> Make(uyiui) >> Make(bbvkj)
 
