@@ -7,7 +7,7 @@ import traceback
 from retry import retry
 import time
 import importlib
-from state_manager import *
+from state_manager import StateManager
 
 def pre_post_signal(func):
     def wrapper(*args, **kwargs):
@@ -31,10 +31,12 @@ def pre_post_signal(func):
 def runtime_func(params):
     module = importlib.import_module(params['dag'])
     func = getattr(module, params['call'])
-    curr_state = pull(params["dag"])
+    M = StateManager(manager = "REDIS")
+    curr_state = M.pull(params["dag"])
+    print("curr_state:",curr_state)
     ''' actual function call passed by dag '''
     curr_state = func(curr_state)
-    push(params["dag"],curr_state)
+    M.push(params["dag"],curr_state)
     return True
     
 def callback(ch, method, properties, body):
