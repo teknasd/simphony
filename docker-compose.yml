@@ -1,0 +1,25 @@
+version: '3.3'
+services:
+
+  controller:
+    container_name: controller
+    command: bash -c "python3 -u controller.py"
+    build: .
+    # env_file:
+    #   - .env
+
+    networks:
+      - backend
+
+
+  worker:
+    container_name: worker
+    command: bash -c "python3 -u worker.py"
+    build: .
+
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: "bridge"

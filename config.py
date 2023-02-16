@@ -4,8 +4,8 @@
 ''' set redis connection '''
 STATE_MANAGER = 'REDIS'
 REDIS_CON = {
-    "HOST" : '127.0.0.1',
-    "PORT" : 6379,
+    "HOST" : 'redis',
+    "PORT" : 6700,
     "PASS" : ''
 }
 
