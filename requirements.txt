@@ -2,3 +2,4 @@ pika
 igraph
 numpy
 retry
+redis

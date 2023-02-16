@@ -8,6 +8,7 @@ from retry import retry
 import time
 import importlib
 from state_manager import StateManager
+import config as config
 
 def pre_post_signal(func):
     def wrapper(*args, **kwargs):
@@ -27,11 +28,11 @@ def pre_post_signal(func):
     return wrapper
 
 @pre_post_signal
-@retry(tries = 3)
+@retry(tries = config.TASK_RETRY_COUNT)
 def runtime_func(params):
     module = importlib.import_module(params['dag'])
     func = getattr(module, params['call'])
-    M = StateManager(manager = "REDIS")
+    M = StateManager(manager = config.STATE_MANAGER)
     curr_state = M.pull(params["dag"])
     print("curr_state:",curr_state)
     ''' actual function call passed by dag '''
@@ -50,14 +51,14 @@ def callback(ch, method, properties, body):
     print("---------- end --------------\n\n\n")
 
 def emit_ack(p,status):
-    r = Rabi(q = "ack")
+    r = Rabi(q = config.ACK_Q)
     p["status"] = status
     pprint(p)
     r.push_to_q(json.dumps(p))
     r.close()
 
 def main():
-    r = Rabi(q = "ex")
+    r = Rabi(q = config.EX_Q)
     r.listen_and_call(call= callback)
     print("********************")
     r.close()

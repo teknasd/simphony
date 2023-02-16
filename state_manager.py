@@ -1,7 +1,6 @@
 import redis
 import json
-
-MANAGER = "REDIS"
+from config import STATE_MANAGER
 
 class Redis():
     def __init__(self,host='127.0.0.1', port=6379,password=''):
@@ -31,7 +30,8 @@ class StateManager():
         if manager == 'LOCAL':
             pass
         if manager == 'REDIS':
-            self.Mgr =  Redis()
+            from config import REDIS_CON
+            self.Mgr =  Redis(REDIS_CON["HOST"],REDIS_CON["PORT"],REDIS_CON["PASS"])
 
     def pull(self,key):
         return self.Mgr.pull(key)

@@ -1,24 +1,19 @@
 #!/usr/bin/env python
 import pika
-
-location = "172.16.12.17"
-# location = "rabbitmq"
-# location = "localhost"
+from config import RABBIT_CON
 
 class Rabi():
     def __init__(self,q = None):
-        ConnectionParameters = pika.ConnectionParameters(location,5672)
+        ConnectionParameters = pika.ConnectionParameters(RABBIT_CON["LOCATION"],RABBIT_CON["PORT"])
         self.connection = pika.BlockingConnection(ConnectionParameters)
         self.channel = self.connection.channel()
         self.connect()
-        # print(self.connection)
-        # print(self.channel)
         self.q = "default" if q is None else q
         self._queue_declare(q=self.q)
         self.channel.basic_qos(prefetch_count=1)
 
     def connect(self):
-        ConnectionParameters = pika.ConnectionParameters(location,5672)
+        ConnectionParameters = pika.ConnectionParameters(RABBIT_CON["LOCATION"],RABBIT_CON["PORT"])
         self.connection = pika.BlockingConnection(ConnectionParameters)
         self.channel = self.connection.channel()
     
