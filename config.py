@@ -25,3 +25,6 @@ EX_Q = 'ex'
 ACK_Q = 'ack'
 
 
+# dags
+''' dag folder '''
+DAG_FOLDER = 'dags'

@@ -3,6 +3,7 @@ from dag import DAG
 from rabi import Rabi    
 import threading
 from pprint import pprint
+import config
 
 
 class Controller:
@@ -26,7 +27,7 @@ class Controller:
 
     def _read_dags_path(self):
         from glob import glob
-        return glob("dags/*.py",recursive = False)
+        return glob(f"{config.DAG_FOLDER}/*.py",recursive = False)
 
 
     def push_task_to_q(self,d,t):
@@ -86,7 +87,7 @@ def ack(ch, method, properties, body):
 
 
 def callback_func():
-    r = Rabi(q = "ack")
+    r = Rabi(q = config.ACK_Q)
     r.listen_and_call(call= ack)
     r.close()
 
