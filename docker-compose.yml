@@ -1,6 +1,16 @@
 version: '3.3'
 services:
 
+
+  # docker run -d --name redis -p 6700:6379 redis:latest
+  redis:
+    container_name: redis
+    image: redis:latest
+    ports:
+      - 6700:6700
+    networks:
+      - backend
+
   controller:
     container_name: controller
     command: bash -c "python3 -u controller.py"

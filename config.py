@@ -5,7 +5,7 @@
 STATE_MANAGER = 'REDIS'
 REDIS_CON = {
     "HOST" : 'redis',
-    "PORT" : 6700,
+    "PORT" : 6379,
     "PASS" : ''
 }
 

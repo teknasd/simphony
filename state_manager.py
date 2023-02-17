@@ -8,6 +8,7 @@ class Redis():
             host=host,
             port=port,
             password=password)
+        self.r.ping()
 
     def push(self,key, val):
         try:
