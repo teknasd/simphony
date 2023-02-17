@@ -33,3 +33,9 @@ DAG_FOLDER = 'dags'
 # task setting
 ''' set task retries on faliure '''
 TASK_RETRY_COUNT = 3
+
+
+# ---------------------------------------------------------
+#  Concurrency settings (threads)
+''' set the number of threads in a worker '''
+CONCURRENCY = 4

@@ -9,6 +9,7 @@ import time
 import importlib
 from state_manager import StateManager
 import config as config
+import threading
 
 def pre_post_signal(func):
     def wrapper(*args, **kwargs):
@@ -57,17 +58,36 @@ def emit_ack(p,status):
     r.push_to_q(json.dumps(p))
     r.close()
 
-def main():
+class ConcurrencyManager():
+    def __init__(self,concurr = 1):
+        ConcurrencyManager.concurr = concurr
+        ConcurrencyManager.thread_mgr = {}
+
+    def bootup(self,func_call):
+        # start new thread for CONCURRENCY in config
+        for i in range(ConcurrencyManager.concurr + 1):
+            listen_thread = threading.Thread(target=func_call)
+            listen_thread.start()
+            ConcurrencyManager.thread_mgr[i] = listen_thread
+    def stop_threads(self):
+        for th in len(ConcurrencyManager.thread_mgr):
+            th.join()
+
+def brocker_listner():
     r = Rabi(q = config.EX_Q)
     r.listen_and_call(call= callback)
     print("********************")
     r.close()
 
+def main():
+    ConcurrencyManager(concurr = config.CONCURRENCY).bootup(brocker_listner)
+
 if __name__ == '__main__':
     try:
         main()
     except KeyboardInterrupt:
-        print('Interrupted')
+        print('Main exucution thread interrupted | Now closing all the worker threads')
+        ConcurrencyManager.stop_threads()
         try:
             sys.exit(0)
         except SystemExit:
