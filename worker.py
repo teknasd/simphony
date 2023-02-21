@@ -65,7 +65,7 @@ class ConcurrencyManager():
 
     def bootup(self,func_call):
         # start new thread for CONCURRENCY in config
-        for i in range(ConcurrencyManager.concurr + 1):
+        for i in range(ConcurrencyManager.concurr):
             listen_thread = threading.Thread(target=func_call)
             listen_thread.start()
             ConcurrencyManager.thread_mgr[i] = listen_thread
