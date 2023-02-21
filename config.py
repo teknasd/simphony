@@ -17,6 +17,9 @@ RABBIT_CON = {
     "PORT" : 5672
 }
 
+''' set ackowledge queue '''
+CALL_Q = 'ack'
+
 ''' set execution queue '''
 EX_Q = 'ex'
 
@@ -38,4 +41,4 @@ TASK_RETRY_COUNT = 3
 # ---------------------------------------------------------
 #  Concurrency settings (threads)
 ''' set the number of threads in a worker '''
-CONCURRENCY = 4
+CONCURRENCY = 1
