@@ -3,3 +3,6 @@ igraph
 numpy
 retry
 redis
+fastapi
+uvicorn
+python-multipart
