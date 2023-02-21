@@ -13,11 +13,22 @@ services:
 
   controller:
     container_name: controller
-    command: bash -c "python3 -u controller.py"
+    command: bash -c "python3 -u ctrl.py"
     build: .
+    ports:
+      - 8080:8080 
     # env_file:
     #   - .env
 
+    networks:
+      - backend
+
+  api:
+    container_name: api
+    command: bash -c "uvicorn api:app --host 0.0.0.0 --port 5000"
+    build: .
+    ports:
+      - 5000:5000
     networks:
       - backend
 
