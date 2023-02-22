@@ -19,6 +19,11 @@ def ack(ch, method, properties, body):
     print("---------- ack recieved ---------")
     print(" [x] Received %r" % body)
     res = json.loads(body)
+
+    if "ctrl" in res:
+        Controller([res["dag"]]).bake()
+        return
+
     print(res["status"])
     print(C.dag_store)
 
@@ -57,16 +62,26 @@ def callback_func():
     r.listen_and_call(call= ack)
     r.close()
 
-def callback_func_push():
-    r = Rabi(q = config.CALL_Q)
-    r.listen_and_call(call= call_ctrl)
-    r.close()
+# def callback_func_push():
+#     r = Rabi(q = config.CALL_Q)
+#     r.listen_and_call(call= call_ctrl)
+#     r.close()
 
 # Start listening for ACK on another thread
 listen_thread = threading.Thread(target=callback_func)
 listen_thread.start()
 
-# Start listening for ACK on another thread
-listen_thread_2 = threading.Thread(target=callback_func_push)
-listen_thread_2.start()
+# # Start listening for ACK on another thread
+# listen_thread_2 = threading.Thread(target=callback_func_push)
+# listen_thread_2.start()
 # callback_func_push()
+
+''' more sofisticated way of consuming 2 queues at same time async manner''' 
+# r = Rabi(async_ = True).connect_async(on_open)
+
+# def on_open():
+#     r.connection.channel(on_open_callback=on_channel_open)
+
+# def on_channel_open(channel):
+#     channel.basic_consume(queue='queue1', on_message_callback=callback)
+#     channel.basic_consume(queue='queue2', on_message_callback=callback)

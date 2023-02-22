@@ -21,6 +21,7 @@ class Controller:
         # self.bake()
         
     def bake(self):
+        print("inside baking")
         for fi in self.files:
             d = DAG(user = 1, filepath = fi)
             d.create_graph_py()

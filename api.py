@@ -28,8 +28,8 @@ async def run_dag(dag: str = Form(...),context: str = Form(...)):
         print("paylload:",dag,context)
         # C = Controller( [dag + ".py"])
         # print(C.dag_store)
-        r = Rabi(q = config.CALL_Q)
-        task_obj = {"dag": dag}
+        r = Rabi(q = config.ACK_Q)
+        task_obj = {"dag": dag,"ctrl":True}
         r.push_to_q(json.dumps(task_obj))
         r.close()
         db_result = 'Success'
