@@ -7,6 +7,7 @@ from controller import Controller
 from fastapi import FastAPI,Form
 import uvicorn
 from pydantic import BaseModel
+from typing import Dict
 
 ''' this is the main thread '''
 # C = Controller(filepaths=["funcs"])
@@ -20,16 +21,14 @@ app = FastAPI(
 
 class RunModel(BaseModel):
     dag: str = None
-    context: str = None
+    context: Dict = None
 
 @app.post("/run")
-async def run_dag(dag: str = Form(...),context: str = Form(...)):
+async def run_dag(model: RunModel):
     try:
-        print("paylload:",dag,context)
-        # C = Controller( [dag + ".py"])
-        # print(C.dag_store)
+        print("paylload:",model)
         r = Rabi(q = config.ACK_Q)
-        task_obj = {"dag": dag,"ctrl":True}
+        task_obj = {"dag": model.dag,"ctrl":True,"context":model.context}
         r.push_to_q(json.dumps(task_obj))
         r.close()
         db_result = 'Success'

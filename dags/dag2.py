@@ -6,7 +6,7 @@ from time import sleep
 
 def qwe(context):
     print(f"context: {context}")
-    context["a"] = 2
+    context["a"] = context["x"]
     sleep(3)
     return context
 

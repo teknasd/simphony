@@ -20,14 +20,14 @@ class Controller:
         print(self.files)
         # self.bake()
         
-    def bake(self):
+    def bake(self,contexts):
         print("inside baking")
-        for fi in self.files:
+        for fi,con in zip(self.files,contexts):
             d = DAG(user = 1, filepath = fi)
             d.create_graph_py()
             Controller.dag_store[d.dag_id] = d
             print(Controller.dag_store)
-            # self._save(d.dag_id,fi)
+            self._save(d.dag_id,con)
             for node in d.find_root_nodes():
                 self.push_task_to_q(d,node)
 
@@ -39,7 +39,7 @@ class Controller:
 
     def _save(self,key,val):
         M = StateManager(manager = config.STATE_MANAGER)
-        M.push(params["dag"],curr_state)
+        M.push(key,val)
 
     def _read_dags_path(self):
         from glob import glob

@@ -21,7 +21,7 @@ def ack(ch, method, properties, body):
     res = json.loads(body)
 
     if "ctrl" in res:
-        Controller([res["dag"]]).bake()
+        Controller([res["dag"]]).bake( [res["context"]] )
         return
 
     print(res["status"])
