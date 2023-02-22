@@ -17,9 +17,10 @@ services:
     build: .
     ports:
       - 8080:8080 
-    # env_file:
-    #   - .env
-
+    volumes:
+      - "./dags:/app/dags"
+      - "./temp:/app/temp"
+      - "./logs:/app/logs"
     networks:
       - backend
 
@@ -29,6 +30,10 @@ services:
     build: .
     ports:
       - 5000:5000
+    volumes:
+      - "./dags:/app/dags"
+      - "./temp:/app/temp"
+      - "./logs:/app/logs"
     networks:
       - backend
 
@@ -37,10 +42,19 @@ services:
     container_name: worker
     command: bash -c "python3 -u worker.py"
     build: .
-
+    volumes:
+      - "./dags:/app/dags"
+      - "./temp:/app/temp"
+      - "./logs:/app/logs"
     networks:
       - backend
 
 networks:
   backend:
     driver: "bridge"
+
+
+volumes:
+  dags:
+  logs:
+  temp:

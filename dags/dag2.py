@@ -25,4 +25,14 @@ def bbvkj(context):
     return context
 
 
-Make(qwe) >> Make(uyiui) >> Make(bbvkj)
+def dgljlk(context):
+    print(f"context: {context}")
+    context["d"] = context["c"] ** -context["b"]
+    sleep(3)
+    return context
+
+
+Make(qwe) >> Make(uyiui) >> Make(bbvkj) >> Make(dgljlk)
+
+
+
