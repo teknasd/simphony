@@ -31,14 +31,18 @@ def pre_post_signal(func):
 @pre_post_signal
 @retry(tries = config.TASK_RETRY_COUNT)
 def runtime_func(params):
-    module = importlib.import_module(params['dag'])
+    try:
+        module = importlib.reload(sys.modules[params['dag']])
+    except:
+        module = importlib.import_module(params['dag'])
     func = getattr(module, params['call'])
     M = StateManager(manager = config.STATE_MANAGER)
-    curr_state = M.pull(params["dag"])
-    print("curr_state:",curr_state)
+    curr_state = M.pull(params["dag_id"])
+    print("prev_state:",curr_state)
     ''' actual function call passed by dag '''
     curr_state = func(curr_state)
-    M.push(params["dag"],curr_state)
+    print("post_state:",curr_state)
+    M.push(params["dag_id"],curr_state)
     return True
     
 def callback(ch, method, properties, body):

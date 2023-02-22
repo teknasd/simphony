@@ -4,6 +4,8 @@ import json
 from pprint import pprint
 from uuid import uuid4
 from rshift import Make
+import traceback
+import sys
 
 '''
 https://igraph.org/python/tutorial/0.9.7/tutorial.html#setting-and-retrieving-attributes
@@ -36,7 +38,15 @@ class DAG():
     #     return f"DAG id: {self.dag_id}"
     
     def create_graph_py(self):
-        module = importlib.import_module(self.dag)
+        try:
+            print(f"reloading module ... {self.dag}")
+            module = importlib.reload(sys.modules[self.dag])
+        except:
+            print(f"reloading failed ... {self.dag}")
+            print(f'There is some error at {traceback.format_exc()}')
+            
+            module = importlib.import_module(self.dag)
+            print(f"checking ... {module}")
         self.module_vars = vars(module)
         print(Make.flow)
         self.flow = self.module_vars['Make'].flow
