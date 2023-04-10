@@ -21,7 +21,7 @@ def ack(ch, method, properties, body):
         print(" [x] Received %r" % body)
         res = json.loads(body)
 
-        if "ctrl" in res:
+        if "ctrl" in res and res["ctrl"] == True:
             Controller([res["dag"]]).bake( [res["context"]] )
             return
 
