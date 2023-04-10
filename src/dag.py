@@ -6,6 +6,7 @@ from uuid import uuid4
 from rshift import Make
 import traceback
 import sys
+from connections import Connection
 
 '''
 https://igraph.org/python/tutorial/0.9.7/tutorial.html#setting-and-retrieving-attributes
@@ -20,6 +21,11 @@ class DAG():
         self.state = dict()
         self.filepath = str(filepath)
         self.dag = self.filepath.split(".")[0].replace('/','.')
+        if not os.path.exists(self.filepath):
+            Connection.con.get_object("flows",self.dag,self.filepath)
+            print(os.path.exists(self.filepath))
+
+
         # print(self.dag)
         try:
             self.data = json.load(open(filepath,"r"))

@@ -11,6 +11,22 @@ services:
     networks:
       - backend
 
+  minio:
+    image: minio/minio
+    container_name: minio
+    restart: always
+    ports: ["9001:9000"]
+    entrypoint: sh
+    command: -c 'mkdir -p /data/flows && minio server /data'
+    volumes:
+      - /home/symphony:/data
+    environment:
+      MINIO_REGION: ap-south-1
+      MINIO_ACCESS_KEY: c@rpl@c@ring
+      MINIO_SECRET_KEY: c@rpl@c@ring
+    networks:
+      - backend
+
   controller:
     container_name: controller
     command: bash -c "python3 -u ctrl.py"

@@ -24,16 +24,16 @@ class Controller:
         print("inside baking")
         for fi,con in zip(self.files,contexts):
             # check if file exists
-            if os.path.exists(fi):
-                d = DAG(user = 1, filepath = fi)
-                d.create_graph_py()
-                Controller.dag_store[d.dag_id] = d
-                print(Controller.dag_store)
-                self._save(d.dag_id,con)
-                for node in d.find_root_nodes():
-                    self.push_task_to_q(d,node)
-            else:
-                print(f"{fi} does not exist.")
+            # if os.path.exists(fi):
+            d = DAG(user = 1, filepath = fi)
+            d.create_graph_py()
+            Controller.dag_store[d.dag_id] = d
+            print(Controller.dag_store)
+            self._save(d.dag_id,con)
+            for node in d.find_root_nodes():
+                self.push_task_to_q(d,node)
+            # else:
+            #     print(f"{fi} does not exist.")
 
     def make(self,files):
         for fi in files:
