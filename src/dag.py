@@ -6,6 +6,7 @@ from uuid import uuid4
 from rshift import Make
 import traceback
 import sys
+import os
 from connections import Connection
 
 '''
@@ -20,10 +21,17 @@ class DAG():
         self.dag_id = str(uuid4())
         self.state = dict()
         self.filepath = str(filepath)
-        self.dag = self.filepath.split(".")[0].replace('/','.')
         if not os.path.exists(self.filepath):
-            Connection.con.get_object("flows",self.dag,self.filepath)
-            print(os.path.exists(self.filepath))
+            cons = Connection()
+            try:
+                fetched = cons.con.get_object("flows",self.filepath + ".py","dags/"+self.filepath + ".py")
+            except:
+                raise "Dag is not available to run"
+            if not fetched:
+                raise "Dag is not available to run"
+            print(os.path.exists(filepath))
+            self.filepath = "dags/"+self.filepath + ".py"
+        self.dag = self.filepath.split(".")[0].replace('/','.')
 
 
         # print(self.dag)

@@ -6,3 +6,4 @@ redis
 fastapi
 uvicorn
 python-multipart
+minio

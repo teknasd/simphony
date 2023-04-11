@@ -15,15 +15,15 @@ services:
     image: minio/minio
     container_name: minio
     restart: always
-    ports: ["9001:9000"]
+    ports: ["9000:9000","9001:9001"]
     entrypoint: sh
-    command: -c 'mkdir -p /data/flows && minio server /data'
+    command: -c 'mkdir -p /data/flows && minio server /data/flows --console-address ":9001"'
     volumes:
       - /home/symphony:/data
     environment:
       MINIO_REGION: ap-south-1
-      MINIO_ACCESS_KEY: c@rpl@c@ring
-      MINIO_SECRET_KEY: c@rpl@c@ring
+      MINIO_ROOT_USER: c@rpl@c@ring
+      MINIO_ROOT_PASSWORD: c@rpl@c@ring
     networks:
       - backend
 
