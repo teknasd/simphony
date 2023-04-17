@@ -1,11 +1,17 @@
+import os
+from dotenv import load_dotenv
+import redis
+import datetime,base64
+basedir = os.path.abspath(os.path.dirname(__file__))
+load_dotenv(os.path.join(basedir, '.env.dev'))
 
 # ---------------------------------------------------------
 #  state settings
 ''' set redis connection '''
-STATE_MANAGER = 'REDIS'
+STATE_MANAGER = os.environ.get('STATE_MANAGER')
 REDIS_CON = {
-    "HOST" : 'redis',
-    "PORT" : 6379,
+    "HOST" : os.environ.get('REDIS_CON_IP'),
+    "PORT" : os.environ.get('REDIS_CON_PORT'),
     "PASS" : ''
 }
 
@@ -13,8 +19,8 @@ REDIS_CON = {
 # rabbit settings
 ''' set rabbit connection '''
 RABBIT_CON = {
-    "LOCATION" : "172.16.12.17",
-    "PORT" : 5672
+    "LOCATION" : os.environ.get('RABBIT_CON_IP'),
+    "PORT" : os.environ.get('RABBIT_CON_PORT')
 }
 
 ''' set ackowledge queue '''
@@ -50,9 +56,16 @@ FETCH_FLOWS = True
 FETCH_FLOWS_FROM = 'MINIO'
 
 # --------------------------------------------------------
-# Minio
-MINIO_ENDPOINT = 'minio:9000'
-MINIO_ACCESS_KEY = 'c@rpl@c@ring'
-MINIO_SECRET_KEY = 'c@rpl@c@ring'
-MINIO_SECURE = False
-MINIO_BUCKET = 'flows'
+#  Fetch Flows - Minio
+MINIO_ENDPOINT = os.environ.get('MINIO_ENDPOINT')
+MINIO_ACCESS_KEY = os.environ.get('MINIO_ACCESS_KEY')
+MINIO_SECRET_KEY = os.environ.get('MINIO_SECRET_KEY')
+MINIO_SECURE = os.environ.get('MINIO_SECURE')
+MINIO_BUCKET = os.environ.get('MINIO_BUCKET')
+
+# --------------------------------------------------------
+#  Fetch Flows - S3
+S3_ACCESS_KEY = os.environ.get('AWS_ACCESS_KEY')
+S3_SECRET_KEY = os.environ.get('AWS_SECRET_KEY')
+S3_REGION = os.environ.get('AWS_REGION')
+S3_BUCKET = os.environ.get('AWS_BUCKET')

@@ -24,8 +24,20 @@ class BucketOPS(BaseClass):
                 secret_key=MINIO_SECRET_KEY,
                 secure=False,
             )
-        else:
-            pass
+        elif self.type == "S3":
+            session = boto3.session.Session()
+            client = session.client(
+                service_name='s3',
+                aws_access_key_id=S3_ACCESS_KEY,
+                aws_secret_access_key=S3_SECRET_KEY,
+                config=Config(signature_version='s3v4', s3={'addressing_style': 'path'},
+                retries = {
+                    'max_attempts': 10,
+                    'mode': 'standard'
+                }
+                ),
+                region_name=S3_REGION
+                )
         self.client = client
         return client
     
@@ -48,15 +60,24 @@ class BucketOPS(BaseClass):
         else:
             return False
 
+
     def get_object(self,bucket_name = "",object_name = "",file_name = ""):
         try:
-            self.client.fget_object(
-                bucket_name,
-                object_name,
-                file_name
-            )
-            print("File downloaded successfully!")
-            return True
+            if self.type == "MINIO":
+                self.client.fget_object(
+                    bucket_name,
+                    object_name,
+                    file_name
+                )
+                print("File downloaded successfully!")
+                return True
+
+                # Upload the file
+            elif self.type == "S3":
+                response = self.client.download_file(bucket_name, object_name, file_name)
+                print(response)
+                return True
+
         except Exception:
             print(traceback.format_exc())
             return False
