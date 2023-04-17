@@ -65,6 +65,13 @@ services:
     networks:
       - backend
 
+  rabbitmq:
+    image: rabbitmq:3.11-management
+    container_name: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+
 networks:
   backend:
     driver: "bridge"
