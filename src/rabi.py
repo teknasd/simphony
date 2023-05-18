@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import pika
 from config import RABBIT_CON
+from log_manager import logger
 
 class Rabi():
     def __init__(self,q = None,async_ = False):
@@ -37,7 +38,7 @@ class Rabi():
         res = self.channel.basic_publish(exchange='',
                             routing_key=self.q,
                             body=context)
-        print(f"***** push to q : {context}")
+        logger.info(f"***** push to q : {context}")
 
     def listen_and_call(self,q=None,call=None):
         ''' Continously listen on seperate thread '''
@@ -45,7 +46,7 @@ class Rabi():
             q = self.q
         self.channel.basic_consume(queue=q, on_message_callback=call, auto_ack=True)
 
-        print(' [*] Waiting for messages. To exit press CTRL+C')
+        logger.info(' [*] Waiting for messages. To exit press CTRL+C')
         self.channel.start_consuming()
 
     def close(self):

@@ -2,6 +2,7 @@ from config import *
 from minio import Minio
 from minio.error import S3Error
 import traceback, os
+from log_manager import logger
 
 
 class BaseClass:
@@ -52,10 +53,10 @@ class BucketOPS(BaseClass):
                         file_data,
                         file_stat.st_size,
                     )
-                print("File uploaded successfully")
+                logger.info("File uploaded successfully")
                 return True
             except S3Error as e:
-                print(traceback.format_exc())
+                logger.trace(traceback.format_exc())
                 return False
         else:
             return False
@@ -69,23 +70,23 @@ class BucketOPS(BaseClass):
                     object_name,
                     file_name
                 )
-                print("File downloaded successfully!")
+                logger.info("File downloaded successfully!")
                 return True
 
                 # Upload the file
             elif self.type == "S3":
                 response = self.client.download_file(bucket_name, object_name, file_name)
-                print(response)
+                logger.info(response)
                 return True
 
         except Exception:
-            print(traceback.format_exc())
+            logger.trace(traceback.format_exc())
             return False
 
 class Connection():
     def __init__(self):
-        print("FETCH_FLOWS",FETCH_FLOWS)
-        print("FETCH_FLOWS_FROM",FETCH_FLOWS_FROM)
+        logger.info("FETCH_FLOWS",FETCH_FLOWS)
+        logger.info("FETCH_FLOWS_FROM",FETCH_FLOWS_FROM)
         if FETCH_FLOWS:
             if FETCH_FLOWS_FROM == 'MINIO':
                 self.con = BucketOPS('MINIO')

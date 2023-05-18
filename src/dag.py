@@ -8,7 +8,7 @@ import traceback
 import sys
 import os
 from connections import Connection
-
+from log_manager import logger
 '''
 https://igraph.org/python/tutorial/0.9.7/tutorial.html#setting-and-retrieving-attributes
 '''
@@ -29,7 +29,7 @@ class DAG():
                 raise "Dag is not available to run"
             if not fetched:
                 raise "Dag is not available to run"
-            print(os.path.exists(filepath))
+            logger.info(os.path.exists(filepath))
             self.filepath = "dags/"+self.filepath + ".py"
         self.dag = self.filepath.split(".")[0].replace('/','.')
 
@@ -53,16 +53,16 @@ class DAG():
     
     def create_graph_py(self):
         try:
-            print(f"reloading module ... {self.dag}")
+            logger.info(f"reloading module ... {self.dag}")
             module = importlib.reload(sys.modules[self.dag])
         except:
-            print(f"reloading failed ... {self.dag}")
-            print(f'There is some error at {traceback.format_exc()}')
+            logger.info(f"reloading failed ... {self.dag}")
+            logger.info(f'There is some error at {traceback.format_exc()}')
             
             module = importlib.import_module(self.dag)
-            print(f"checking ... {module}")
+            logger.info(f"checking ... {module}")
         self.module_vars = vars(module)
-        print(Make.flow)
+        logger.info(Make.flow)
         self.flow = self.module_vars['Make'].flow
         self.nodes = self.module_vars['Make'].nodes #self._find_nodes()
         self.nodes_count = len(self.nodes)

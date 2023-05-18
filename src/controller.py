@@ -5,6 +5,7 @@ import threading
 from pprint import pprint
 from state_manager import StateManager
 import config
+from log_manager import logger
 
 
 class Controller:
@@ -17,18 +18,18 @@ class Controller:
             self.files = self._read_dags_path()
         else:
             self.files = filepaths
-        print(self.files)
+        logger.info(self.files)
         # self.bake()
         
     def bake(self,contexts):
-        print("inside baking")
+        logger.info("inside baking")
         for fi,con in zip(self.files,contexts):
             # check if file exists
             # if os.path.exists(fi):
             d = DAG(user = 1, filepath = fi)
             d.create_graph_py()
             Controller.dag_store[d.dag_id] = d
-            print(Controller.dag_store)
+            logger.info(Controller.dag_store)
             self._save(d.dag_id,con)
             for node in d.find_root_nodes():
                 self.push_task_to_q(d,node)
@@ -66,10 +67,10 @@ class Controller:
 
     def push_next_tasks(self,d,v):
         tasks = d.get_neighbors(vertex=v)
-        print("tasks",tasks)
+        logger.info("tasks",tasks)
         
         for t in tasks:
-            print("t:",t)
+            logger.info("t:",t)
             # print("v:",self.d.get_v_val(t,'task'))
             d.state[d.get_v_val(t,'task_id')] = "Queued"
             self.push_task_to_q(d,t)

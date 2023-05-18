@@ -8,7 +8,7 @@ from fastapi import FastAPI,Form
 import uvicorn
 from pydantic import BaseModel
 from typing import Dict
-
+from log_manager import logger
 ''' this is the main thread '''
 # C = Controller(filepaths=["funcs"])
 # C = Controller()
@@ -26,14 +26,15 @@ class RunModel(BaseModel):
 @app.post("/run")
 async def run_dag(model: RunModel):
     try:
-        print("paylload:",model)
+        logger.info("paylload:",model)
         r = Rabi(q = config.ACK_Q)
         task_obj = {"dag": model.dag,"ctrl":True,"context":model.context}
         r.push_to_q(json.dumps(task_obj))
         r.close()
         db_result = 'Success'
+        logger.info("success")
         return {'status': 'Failed'} if db_result == "Failed" else {'status': 'Success'}
     except Exception as e:
-        print(e)
+        logger.critical(e)
         return {'status': 'Failed'}
 

@@ -10,6 +10,7 @@ import importlib
 from state_manager import StateManager
 import config as config
 import threading
+from log_manager import logger
 
 def pre_post_signal(func):
     def wrapper(*args, **kwargs):
@@ -18,12 +19,12 @@ def pre_post_signal(func):
             st_time = time.monotonic()
             result = func(*args, **kwargs)
             en_time = time.monotonic()
-            print(f"time taken: {en_time- st_time} secs")
+            logger.info(f"time taken: {en_time- st_time} secs")
             emit_ack(params,"Success")
             return result
         except Exception:
             emit_ack(params,"Failed")
-            print(f'There is some error at {traceback.format_exc()}')
+            logger.info(f'There is some error at {traceback.format_exc()}')
             return False
 
     return wrapper
@@ -38,22 +39,22 @@ def runtime_func(params):
     func = getattr(module, params['call'])
     M = StateManager(manager = config.STATE_MANAGER)
     curr_state = M.pull(params["dag_id"])
-    print("prev_state:",curr_state)
+    logger.info("prev_state:",curr_state)
     ''' actual function call passed by dag '''
     curr_state = func(curr_state)
-    print("post_state:",curr_state)
+    logger.info("post_state:",curr_state)
     M.push(params["dag_id"],curr_state)
     return True
     
 def callback(ch, method, properties, body):
-    print("---------- recieved ---------")
+    logger.info("---------- recieved ---------")
     # pprint(ch.__dict__)
-    print(" [x] Received %r" % body)
+    logger.info(" [x] Received %r" % body)
     params = json.loads(body)
-    print(params)
-    print("---------- start ------------")
+    logger.info(params)
+    logger.info("---------- start ------------")
     runtime_func(params=params)
-    print("---------- end --------------\n\n\n")
+    logger.info("---------- end --------------\n\n\n")
 
 def emit_ack(p,status):
     r = Rabi(q = config.ACK_Q)
@@ -80,7 +81,7 @@ class ConcurrencyManager():
 def brocker_listner():
     r = Rabi(q = config.EX_Q)
     r.listen_and_call(call= callback)
-    print("********************")
+    logger.info("********************")
     r.close()
 
 def main():
@@ -90,7 +91,7 @@ if __name__ == '__main__':
     try:
         main()
     except KeyboardInterrupt:
-        print('Main exucution thread interrupted | Now closing all the worker threads')
+        logger.info('Main exucution thread interrupted | Now closing all the worker threads')
         ConcurrencyManager.stop_threads()
         try:
             sys.exit(0)
